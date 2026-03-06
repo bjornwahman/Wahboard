@@ -7,6 +7,9 @@ const metricsEl = document.getElementById('metrics');
 const recentEl = document.getElementById('recent-results');
 const statusFilterEl = document.getElementById('status-filter');
 const timeFilterEl = document.getElementById('time-filter');
+const tileStatusEl = document.getElementById('tile-status-breakdown');
+const tileHealthEl = document.getElementById('tile-health-score');
+const tileLatencyEl = document.getElementById('tile-latency-bars');
 
 const totals = {
   total: checks.length,
@@ -88,7 +91,73 @@ function renderRecent() {
     .join('');
 }
 
+function renderSquaredupInspiredTiles() {
+  if (!tileStatusEl || !tileHealthEl || !tileLatencyEl) return;
+
+  const ok = totals.healthy;
+  const failing = totals.failing;
+  const untested = totals.untested;
+  const total = totals.total || 1;
+
+  const okPct = Math.round((ok / total) * 100);
+  const failPct = Math.round((failing / total) * 100);
+  const untestedPct = Math.max(0, 100 - okPct - failPct);
+
+  tileStatusEl.innerHTML = `
+    <div class="tile-donut" style="--ok:${okPct}; --fail:${failPct}; --untested:${untestedPct};">
+      <div class="tile-donut-center">
+        <strong>${okPct}%</strong>
+        <span>OK</span>
+      </div>
+    </div>
+    <ul class="tile-legend">
+      <li><span class="dot ok"></span>Friska: ${ok}</li>
+      <li><span class="dot danger"></span>Felande: ${failing}</li>
+      <li><span class="dot warn"></span>Ej körda: ${untested}</li>
+    </ul>
+  `;
+
+  const executedChecks = checks.filter((check) => check.lastResult);
+  const healthScore = executedChecks.length
+    ? Math.round((executedChecks.filter((check) => check.lastResult.ok).length / executedChecks.length) * 100)
+    : 0;
+
+  tileHealthEl.innerHTML = `
+    <div class="tile-score ${healthScore >= 80 ? 'ok' : healthScore >= 50 ? 'warn' : 'danger'}">${healthScore}</div>
+    <p class="muted">Health score baserad på senaste körning för checks som har historik.</p>
+  `;
+
+  const latencyChecks = checks
+    .filter((check) => check.lastResult?.latencyMs)
+    .sort((a, b) => b.lastResult.latencyMs - a.lastResult.latencyMs)
+    .slice(0, 5);
+
+  if (!latencyChecks.length) {
+    tileLatencyEl.innerHTML = '<p class="muted">Ingen latency-data tillgänglig ännu.</p>';
+    return;
+  }
+
+  const maxLatency = Math.max(...latencyChecks.map((check) => check.lastResult.latencyMs));
+
+  tileLatencyEl.innerHTML = latencyChecks
+    .map((check) => {
+      const latency = check.lastResult.latencyMs;
+      const widthPct = Math.max(12, Math.round((latency / maxLatency) * 100));
+      return `
+        <div class="latency-row">
+          <div class="latency-label">${check.name}</div>
+          <div class="latency-bar-wrap">
+            <div class="latency-bar" style="width:${widthPct}%"></div>
+            <span>${latency} ms</span>
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+}
+
 statusFilterEl?.addEventListener('change', renderRecent);
 timeFilterEl?.addEventListener('change', renderRecent);
 
 renderRecent();
+renderSquaredupInspiredTiles();
