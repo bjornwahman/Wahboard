@@ -24,11 +24,12 @@
         <header class="page-header">
           <div>
             <h2>Systeminställningar</h2>
-            <p class="muted">Hantera globala settings för checks och dashboard.</p>
+            <p class="muted">Hantera globala settings för checks, dashboard och integrationer.</p>
           </div>
         </header>
 
         <section class="card">
+          <h3>Globala inställningar</h3>
           <form id="settings-form" class="form-grid">
             <label>Default timeout (ms)
               <input name="defaultTimeoutMs" type="number" min="500" step="100" />
@@ -50,8 +51,42 @@
         </section>
 
         <section class="card" style="margin-top: 16px;">
+          <h3>SCOM Integration</h3>
+          <p class="muted">Konfigurera anslutning mot Microsoft SCOM och kör test/synk från UI.</p>
+          <form id="scom-form" class="form-grid" style="margin-top: 10px;">
+            <label>Management server
+              <input name="managementServer" placeholder="scom-mgmt-01.contoso.local" required />
+            </label>
+            <label>Management group
+              <input name="managementGroup" placeholder="PROD-MG" required />
+            </label>
+            <label>Username
+              <input name="username" placeholder="CONTOSO\\svc_wahboard" required />
+            </label>
+            <label>Password
+              <input name="password" type="password" placeholder="••••••••" required />
+            </label>
+            <label>Sync intervall (min)
+              <input name="syncIntervalMinutes" type="number" min="1" max="240" />
+            </label>
+            <label style="justify-content:end;">
+              <span>Aktivera integration</span>
+              <input name="enabled" type="checkbox" />
+            </label>
+            <div style="display:flex; gap:10px; align-items:end; flex-wrap: wrap; grid-column: 1 / -1;">
+              <button type="submit">Spara SCOM-config</button>
+              <button class="secondary" type="button" id="scom-test-connection">Testa anslutning</button>
+              <button class="secondary" type="button" id="scom-sync-now">Synka nu</button>
+              <button class="secondary" type="button" id="scom-reset">Återställ SCOM</button>
+            </div>
+          </form>
+          <p class="muted" id="scom-feedback" style="margin-top: 12px;"></p>
+        </section>
+
+        <section class="card" style="margin-top: 16px;">
           <h3>Systemstatus</h3>
           <p class="muted" id="settings-summary"></p>
+          <p class="muted" id="scom-summary"></p>
         </section>
       </main>
     </div>

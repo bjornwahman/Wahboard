@@ -1,6 +1,7 @@
 const STORAGE_KEYS = {
   checks: 'wahboard.checks',
-  settings: 'wahboard.settings'
+  settings: 'wahboard.settings',
+  scomIntegration: 'wahboard.integrations.scom'
 };
 
 const defaultSettings = {
@@ -8,6 +9,20 @@ const defaultSettings = {
   notificationEmail: '',
   autoRefreshSeconds: 30,
   environmentLabel: 'production'
+};
+
+const defaultScomIntegration = {
+  managementServer: '',
+  managementGroup: '',
+  username: '',
+  password: '',
+  syncIntervalMinutes: 5,
+  enabled: false,
+  lastConnectionStatus: 'not-tested',
+  lastConnectionCheckedAt: null,
+  lastSyncStatus: 'not-started',
+  lastSyncAt: null,
+  lastSyncSummary: ''
 };
 
 export function getSettings() {
@@ -26,6 +41,15 @@ export function getChecks() {
 
 export function saveChecks(checks) {
   localStorage.setItem(STORAGE_KEYS.checks, JSON.stringify(checks));
+}
+
+export function getScomIntegration() {
+  const raw = localStorage.getItem(STORAGE_KEYS.scomIntegration);
+  return raw ? { ...defaultScomIntegration, ...JSON.parse(raw) } : { ...defaultScomIntegration };
+}
+
+export function saveScomIntegration(nextIntegration) {
+  localStorage.setItem(STORAGE_KEYS.scomIntegration, JSON.stringify(nextIntegration));
 }
 
 export function setActiveNav() {
