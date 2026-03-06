@@ -221,3 +221,35 @@ td {
     align-items: stretch;
   }
 }
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.tile-card {
+  background: rgba(5, 5, 24, 0.45);
+  border: 1px solid rgba(225, 213, 229, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.tile-card h4 {
+  margin: 10px 0 8px;
+}
+
+.tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tile-type {
+  font-size: 0.8rem;
+  border: 1px solid rgba(225, 213, 229, 0.3);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
