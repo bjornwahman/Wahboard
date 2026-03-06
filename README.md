@@ -32,7 +32,22 @@ Se detaljer i:
 - [docs/mvp-roadmap.md](docs/mvp-roadmap.md)
 - [docs/api-contract.md](docs/api-contract.md)
 
-## Snabbstart (designfas)
+## Frontend (påbörjad)
 
-Detta repo innehåller i nuläget en genomarbetad blueprint för implementation.
-Nästa steg är att välja tech stack och påbörja scaffolding enligt roadmap.
+Projektet innehåller nu en första frontend-prototyp i `frontend/` med:
+- **Överblicks-dashboard** (`frontend/index.html`)
+- **REST API checks med GUI-hantering** (`frontend/checks.html`)
+- **Systemsida för inställningar** (`frontend/system.html`)
+- **Färgschema** enligt lila/mörk skala i `frontend/styles.css`
+
+### Köra lokalt
+
+```bash
+cd frontend
+python3 -m http.server 4173
+```
+
+Öppna sedan:
+- <http://localhost:4173/index.html>
+- <http://localhost:4173/checks.html>
+- <http://localhost:4173/system.html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wahboard API Checks</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-badge"></div>
+          <h1>Wahboard</h1>
+        </div>
+        <nav class="nav">
+          <a href="index.html">Överblick</a>
+          <a href="checks.html">API Checks</a>
+          <a href="system.html">System</a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="page-header">
+          <div>
+            <h2>REST API checks</h2>
+            <p class="muted">Skapa, kör och ta bort checks direkt i GUI.</p>
+          </div>
+          <button id="run-all">Kör alla checks</button>
+        </header>
+
+        <section class="card">
+          <h3>Ny check</h3>
+          <form id="check-form" class="form-grid">
+            <label>Namn
+              <input name="name" required placeholder="Auth Health" />
+            </label>
+            <label>Endpoint URL
+              <input name="url" type="url" required placeholder="https://api.example.com/health" />
+            </label>
+            <label>Method
+              <select name="method">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>DELETE</option>
+              </select>
+            </label>
+            <label>Expected status
+              <input name="expectedStatus" type="number" min="100" max="599" value="200" />
+            </label>
+            <label>Interval (s)
+              <input name="intervalSeconds" type="number" min="5" value="30" />
+            </label>
+            <div style="display:flex;align-items:end;">
+              <button type="submit">Lägg till check</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card" style="margin-top: 16px;">
+          <h3>Check-lista</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Namn</th>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Latency</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="checks-table"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="checks.js"></script>
+  </body>
+</html>
