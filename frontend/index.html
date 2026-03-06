@@ -26,6 +26,26 @@
             <h2>Överblicks-dashboard</h2>
             <p class="muted">Live status för API-checkar och systeminställningar.</p>
           </div>
+          <div class="dashboard-controls">
+            <label>
+              Statusfilter
+              <select id="status-filter">
+                <option value="all">Alla</option>
+                <option value="ok">Endast OK</option>
+                <option value="failing">Endast felande</option>
+                <option value="untested">Endast ej körda</option>
+              </select>
+            </label>
+            <label>
+              Tidsintervall
+              <select id="time-filter">
+                <option value="all">All historik</option>
+                <option value="1h">Senaste timmen</option>
+                <option value="24h">Senaste 24 timmarna</option>
+                <option value="7d">Senaste 7 dagarna</option>
+              </select>
+            </label>
+          </div>
         </header>
 
         <section class="grid cards-3" id="metrics"></section>

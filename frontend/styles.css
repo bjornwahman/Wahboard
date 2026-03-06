@@ -188,3 +188,25 @@ td {
   .layout { grid-template-columns: 1fr; }
   .sidebar { border-right: 0; border-bottom: 1px solid rgba(225, 213, 229, 0.18); }
 }
+
+.dashboard-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.dashboard-controls label {
+  min-width: 170px;
+}
+
+.dashboard-controls select {
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .dashboard-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
