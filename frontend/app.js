@@ -8,7 +8,12 @@ const defaultSettings = {
   defaultTimeoutMs: 4000,
   notificationEmail: '',
   autoRefreshSeconds: 30,
-  environmentLabel: 'production'
+  environmentLabel: 'production',
+  azureTenantId: '',
+  azureClientId: '',
+  azureClientSecret: '',
+  azureKustoClusterUrl: '',
+  azureKustoDatabase: ''
 };
 
 const defaultScomIntegration = {

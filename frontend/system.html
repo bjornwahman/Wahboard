@@ -43,6 +43,21 @@
             <label>Notifieringsmail
               <input name="notificationEmail" type="email" placeholder="ops@company.se" />
             </label>
+            <label>Azure Tenant ID
+              <input name="azureTenantId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+            </label>
+            <label>Azure Client ID
+              <input name="azureClientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+            </label>
+            <label>Azure Client Secret
+              <input name="azureClientSecret" type="password" placeholder="Klienthemlighet" />
+            </label>
+            <label>Azure Kusto Cluster URL
+              <input name="azureKustoClusterUrl" placeholder="https://cluster.kusto.windows.net" />
+            </label>
+            <label>Azure Kusto default-databas
+              <input name="azureKustoDatabase" placeholder="OperationsDB" />
+            </label>
             <div style="display:flex; align-items:end; gap:10px;">
               <button type="submit">Spara inställningar</button>
               <button class="secondary" type="button" id="reset-settings">Återställ</button>

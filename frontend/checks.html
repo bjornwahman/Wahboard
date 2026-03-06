@@ -32,13 +32,19 @@
         <section class="card">
           <h3>Ny check</h3>
           <form id="check-form" class="form-grid">
+            <label>Typ
+              <select name="type" id="check-type">
+                <option value="rest">REST API</option>
+                <option value="kusto">Azure Kusto</option>
+              </select>
+            </label>
             <label>Namn
               <input name="name" required placeholder="Auth Health" />
             </label>
-            <label>Endpoint URL
-              <input name="url" type="url" required placeholder="https://api.example.com/health" />
+            <label class="rest-field">Endpoint URL
+              <input name="url" type="url" placeholder="https://api.example.com/health" />
             </label>
-            <label>Method
+            <label class="rest-field">Method
               <select name="method">
                 <option>GET</option>
                 <option>POST</option>
@@ -46,8 +52,17 @@
                 <option>DELETE</option>
               </select>
             </label>
-            <label>Expected status
+            <label class="rest-field">Expected status
               <input name="expectedStatus" type="number" min="100" max="599" value="200" />
+            </label>
+            <label class="kusto-field">Kusto databas
+              <input name="kustoDatabase" placeholder="OperationsDB" />
+            </label>
+            <label class="kusto-field">Kusto query
+              <textarea name="kustoQuery" rows="3" placeholder="Heartbeat | take 1"></textarea>
+            </label>
+            <label class="kusto-field">Expected rows (min)
+              <input name="expectedRows" type="number" min="0" value="1" />
             </label>
             <label>Interval (s)
               <input name="intervalSeconds" type="number" min="5" value="30" />
@@ -63,8 +78,9 @@
           <table>
             <thead>
               <tr>
+                <th>Typ</th>
                 <th>Namn</th>
-                <th>URL</th>
+                <th>Target</th>
                 <th>Status</th>
                 <th>Latency</th>
                 <th>Actions</th>

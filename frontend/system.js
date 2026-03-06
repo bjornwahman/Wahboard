@@ -31,7 +31,12 @@ function populateSettings() {
       settingsForm.elements[key].value = value;
     }
   });
-  summaryEl.textContent = `Miljö ${settings.environmentLabel}, timeout ${settings.defaultTimeoutMs}ms, auto-refresh ${settings.autoRefreshSeconds}s.`;
+
+  const azureConfigured = settings.azureTenantId && settings.azureClientId && settings.azureClientSecret
+    ? 'Azure auth konfigurerad'
+    : 'Azure auth saknas';
+
+  summaryEl.textContent = `Miljö ${settings.environmentLabel}, timeout ${settings.defaultTimeoutMs}ms, auto-refresh ${settings.autoRefreshSeconds}s, ${azureConfigured}.`;
 }
 
 function populateScom() {
@@ -81,7 +86,12 @@ settingsForm.addEventListener('submit', (event) => {
     defaultTimeoutMs: Number(data.get('defaultTimeoutMs')),
     autoRefreshSeconds: Number(data.get('autoRefreshSeconds')),
     environmentLabel: data.get('environmentLabel'),
-    notificationEmail: data.get('notificationEmail')
+    notificationEmail: data.get('notificationEmail'),
+    azureTenantId: data.get('azureTenantId'),
+    azureClientId: data.get('azureClientId'),
+    azureClientSecret: data.get('azureClientSecret'),
+    azureKustoClusterUrl: data.get('azureKustoClusterUrl'),
+    azureKustoDatabase: data.get('azureKustoDatabase')
   };
 
   saveSettings(nextSettings);
