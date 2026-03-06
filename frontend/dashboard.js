@@ -126,7 +126,7 @@ function renderRecent() {
     .join('');
 }
 
-function renderSquaredupInspiredTiles() {
+function renderOverviewTiles() {
   if (!tileStatusEl || !tileHealthEl || !tileLatencyEl) return;
 
   const ok = totals.healthy;
@@ -196,4 +196,4 @@ timeFilterEl?.addEventListener('change', renderRecent);
 
 renderTiles();
 renderRecent();
-renderSquaredupInspiredTiles();
+renderOverviewTiles();
