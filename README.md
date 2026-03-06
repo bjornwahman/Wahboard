@@ -1,6 +1,6 @@
 # Wahboard
 
-Ett modernt monitoreringsdashboard-system inspirerat av Squaredup DS.
+Ett modernt monitoreringsdashboard-system för moderna driftteam.
 
 ## Vision
 Wahboard ska ge driftteam en enhetlig vy för monitorering, automatisering och integration med Microsoft SCOM.
