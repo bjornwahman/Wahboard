@@ -221,3 +221,116 @@ td {
     align-items: stretch;
   }
 }
+
+.dashboard-tiles {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.tile-donut {
+  --ok: 0;
+  --fail: 0;
+  --untested: 100;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  margin: 8px auto 14px;
+  background: conic-gradient(
+    rgba(64, 214, 159, 0.9) 0 calc(var(--ok) * 1%),
+    rgba(255, 92, 138, 0.9) calc(var(--ok) * 1%) calc((var(--ok) + var(--fail)) * 1%),
+    rgba(255, 180, 84, 0.85) calc((var(--ok) + var(--fail)) * 1%) 100%
+  );
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.tile-donut::before {
+  content: '';
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(37, 37, 55, 0.96);
+  border: 1px solid rgba(225, 213, 229, 0.16);
+}
+
+.tile-donut-center {
+  position: absolute;
+  text-align: center;
+}
+
+.tile-donut-center strong {
+  display: block;
+  font-size: 1.4rem;
+}
+
+.tile-donut-center span {
+  color: rgba(243, 241, 245, 0.7);
+  font-size: 0.82rem;
+}
+
+.tile-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.tile-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.ok { background: var(--ok); }
+.dot.warn { background: var(--warn); }
+.dot.danger { background: var(--danger); }
+
+.tile-score {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.tile-score.ok { color: var(--ok); }
+.tile-score.warn { color: var(--warn); }
+.tile-score.danger { color: var(--danger); }
+
+.latency-row {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.latency-label {
+  font-size: 0.85rem;
+  color: rgba(243, 241, 245, 0.8);
+}
+
+.latency-bar-wrap {
+  position: relative;
+  background: rgba(5, 5, 24, 0.45);
+  border: 1px solid rgba(225, 213, 229, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.latency-bar {
+  height: 24px;
+  background: linear-gradient(90deg, rgba(114, 67, 169, 0.9), rgba(162, 82, 184, 0.95));
+}
+
+.latency-bar-wrap span {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 0.78rem;
+}
