@@ -1,15 +1,33 @@
-import { getChecks, saveChecks, getSettings } from './app.js';
+import { getChecks, saveChecks, getSettings, getDashboards } from './app.js';
 
 const form = document.getElementById('check-form');
 const tableBody = document.getElementById('checks-table');
 const runAllBtn = document.getElementById('run-all');
 const runDueBtn = document.getElementById('run-due');
 const typeSelect = document.getElementById('check-type');
+const dashboardSelect = document.getElementById('dashboard-select');
 const restFields = Array.from(document.querySelectorAll('.rest-field'));
 const kustoFields = Array.from(document.querySelectorAll('.kusto-field'));
 const powershellFields = Array.from(document.querySelectorAll('.powershell-field'));
 
 let checks = getChecks();
+const dashboards = getDashboards();
+
+function createId(prefix) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function populateDashboardOptions() {
+  if (!dashboardSelect) return;
+  dashboardSelect.innerHTML = dashboards
+    .map((dashboard) => `<option value="${dashboard.id}">${dashboard.name}</option>`)
+    .join('');
+}
+
+function dashboardNameFromId(id) {
+  const dashboard = dashboards.find((item) => item.id === id);
+  return dashboard ? dashboard.name : 'Standarddashboard';
+}
 
 function toggleFieldVisibility() {
   const type = typeSelect.value;
@@ -53,7 +71,7 @@ function rowTemplate(check, index) {
   return `
     <tr>
       <td>${typeText}</td>
-      <td>${check.name}</td>
+      <td>${check.name}<br /><span class="muted">${dashboardNameFromId(check.dashboardId)}</span></td>
       <td>${targetText}</td>
       <td><span class="status ${statusClass}">${statusText}</span></td>
       <td>${result?.latencyMs ? `${result.latencyMs} ms` : '-'}</td>
@@ -178,7 +196,9 @@ form.addEventListener('submit', (event) => {
   const type = data.get('type');
 
   const baseCheck = {
+    id: createId('check'),
     type,
+    dashboardId: data.get('dashboardId') || dashboards[0].id,
     name: data.get('name'),
     intervalSeconds: Number(data.get('intervalSeconds')),
     createdAt: new Date().toISOString(),
@@ -254,5 +274,6 @@ runDueBtn?.addEventListener('click', async () => {
 
 typeSelect.addEventListener('change', toggleFieldVisibility);
 
+populateDashboardOptions();
 toggleFieldVisibility();
 render();

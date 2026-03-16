@@ -35,7 +35,7 @@ Se detaljer i:
 ## Frontend (påbörjad)
 
 Projektet innehåller nu en första frontend-prototyp i `frontend/` med:
-- **Överblicks-dashboard** (`frontend/index.html`)
+- **Överblicks-dashboard** (`frontend/index.html`) med stöd för egna dashboards
 - **REST API checks med GUI-hantering** (`frontend/checks.html`)
 - **Systemsida för inställningar** (`frontend/system.html`)
 - **Färgschema** enligt lila/mörk skala i `frontend/styles.css`
