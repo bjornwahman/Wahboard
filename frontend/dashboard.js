@@ -1,13 +1,18 @@
-import { getChecks, getSettings } from './app.js';
+import { getChecks, getSettings, getScomAlerts } from './app.js';
 
 const checks = getChecks();
 const settings = getSettings();
+const scomAlerts = getScomAlerts();
 
 const metricsEl = document.getElementById('metrics');
 const recentEl = document.getElementById('recent-results');
 const statusFilterEl = document.getElementById('status-filter');
 const timeFilterEl = document.getElementById('time-filter');
 const tilesEl = document.getElementById('monitor-tiles');
+const tileStatusEl = document.getElementById('tile-status');
+const tileHealthEl = document.getElementById('tile-health');
+const tileLatencyEl = document.getElementById('tile-latency');
+const scomAlertsEl = document.getElementById('scom-alerts');
 
 const totals = {
   total: checks.length,
@@ -15,7 +20,8 @@ const totals = {
   failing: checks.filter((c) => c.lastResult && !c.lastResult.ok).length,
   untested: checks.filter((c) => !c.lastResult).length,
   kusto: checks.filter((c) => c.type === 'kusto').length,
-  rest: checks.filter((c) => c.type !== 'kusto').length
+  powershell: checks.filter((c) => c.type === 'powershell').length,
+  rest: checks.filter((c) => c.type === 'rest').length
 };
 
 const metrics = [
@@ -24,9 +30,9 @@ const metrics = [
   ['Felande checks', totals.failing, 'Kräver åtgärd i API eller config'],
   ['Ej körda', totals.untested, 'Saknar historik'],
   ['REST checks', totals.rest, 'HTTP/HTTPS monitorering'],
+  ['PowerShell checks', totals.powershell, 'Scriptmonitorering via worker'],
   ['Kusto checks', totals.kusto, 'Azure Data Explorer queries'],
-  ['Auto refresh', `${settings.autoRefreshSeconds}s`, 'Konfigurerad i system'],
-  ['Timeout', `${settings.defaultTimeoutMs} ms`, 'Global timeout']
+  ['Auto refresh', `${settings.autoRefreshSeconds}s`, 'Konfigurerad i system']
 ];
 
 metrics.forEach(([title, value, subtitle]) => {
@@ -49,10 +55,12 @@ function renderTiles() {
       const result = check.lastResult;
       const statusClass = !result ? 'warn' : result.ok ? 'ok' : 'danger';
       const statusText = !result ? 'Ej körd' : result.ok ? 'OK' : 'Fel';
-      const type = check.type === 'kusto' ? 'Kusto' : 'REST';
+      const type = check.type === 'kusto' ? 'Kusto' : check.type === 'powershell' ? 'PowerShell' : 'REST';
       const target = check.type === 'kusto'
         ? `${check.kustoDatabase || settings.azureKustoDatabase || '-'} / ${check.kustoQuery || '-'}`
-        : check.url;
+        : check.type === 'powershell'
+          ? 'Execution worker script'
+          : check.url;
 
       return `
         <article class="tile-card">
@@ -112,7 +120,11 @@ function renderRecent() {
     .map((check) => {
       const statusClass = !check.lastResult ? 'warn' : check.lastResult.ok ? 'ok' : 'danger';
       const statusText = !check.lastResult ? 'Ej körd' : check.lastResult.ok ? 'OK' : 'Fel';
-      const endpointText = check.type === 'kusto' ? 'Kusto query' : check.url;
+      const endpointText = check.type === 'kusto'
+        ? 'Kusto query'
+        : check.type === 'powershell'
+          ? 'PowerShell script'
+          : check.url;
 
       return `
       <tr>
@@ -132,19 +144,8 @@ function renderOverviewTiles() {
   const ok = totals.healthy;
   const failing = totals.failing;
   const untested = totals.untested;
-  const total = totals.total || 1;
-
-  const okPct = Math.round((ok / total) * 100);
-  const failPct = Math.round((failing / total) * 100);
-  const untestedPct = Math.max(0, 100 - okPct - failPct);
 
   tileStatusEl.innerHTML = `
-    <div class="tile-donut" style="--ok:${okPct}; --fail:${failPct}; --untested:${untestedPct};">
-      <div class="tile-donut-center">
-        <strong>${okPct}%</strong>
-        <span>OK</span>
-      </div>
-    </div>
     <ul class="tile-legend">
       <li><span class="dot ok"></span>Friska: ${ok}</li>
       <li><span class="dot danger"></span>Felande: ${failing}</li>
@@ -159,7 +160,7 @@ function renderOverviewTiles() {
 
   tileHealthEl.innerHTML = `
     <div class="tile-score ${healthScore >= 80 ? 'ok' : healthScore >= 50 ? 'warn' : 'danger'}">${healthScore}</div>
-    <p class="muted">Health score baserad på senaste körning för checks som har historik.</p>
+    <p class="muted">Health score baserad på senaste körning.</p>
   `;
 
   const latencyChecks = checks
@@ -191,9 +192,31 @@ function renderOverviewTiles() {
     .join('');
 }
 
+function renderScomAlerts() {
+  if (!scomAlertsEl) return;
+
+  if (!scomAlerts.length) {
+    scomAlertsEl.innerHTML = '<tr><td colspan="4" class="muted">Inga synkade SCOM alerts ännu.</td></tr>';
+    return;
+  }
+
+  scomAlertsEl.innerHTML = scomAlerts
+    .slice(0, 6)
+    .map((alert) => `
+      <tr>
+        <td>${alert.title}</td>
+        <td><span class="status ${alert.severity === 'critical' ? 'danger' : alert.severity === 'warning' ? 'warn' : 'ok'}">${alert.severity}</span></td>
+        <td>${alert.source}</td>
+        <td>${new Date(alert.updatedAt).toLocaleString('sv-SE')}</td>
+      </tr>
+    `)
+    .join('');
+}
+
 statusFilterEl?.addEventListener('change', renderRecent);
 timeFilterEl?.addEventListener('change', renderRecent);
 
 renderTiles();
 renderRecent();
 renderOverviewTiles();
+renderScomAlerts();

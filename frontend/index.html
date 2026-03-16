@@ -53,8 +53,34 @@
 
         <section class="card" style="margin-top: 16px;">
           <h3>Monitor tiles</h3>
-          <p class="muted">REST- och Kusto-tiles med snabb status.</p>
+          <p class="muted">REST-, PowerShell- och Kusto-tiles med snabb status.</p>
           <div class="tiles-grid" id="monitor-tiles"></div>
+        </section>
+
+        
+        <section class="grid cards-3" style="margin-top: 16px;">
+          <article class="card">
+            <h3>Statusfördelning</h3>
+            <div id="tile-status"></div>
+          </article>
+          <article class="card">
+            <h3>Health score</h3>
+            <div id="tile-health"></div>
+          </article>
+          <article class="card">
+            <h3>Top latency</h3>
+            <div id="tile-latency"></div>
+          </article>
+        </section>
+
+        <section class="card" style="margin-top: 16px;">
+          <h3>SCOM alerts</h3>
+          <table>
+            <thead>
+              <tr><th>Alert</th><th>Severity</th><th>Källa</th><th>Senast uppdaterad</th></tr>
+            </thead>
+            <tbody id="scom-alerts"></tbody>
+          </table>
         </section>
 
         <section class="card" style="margin-top: 16px;">
