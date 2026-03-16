@@ -1,7 +1,8 @@
 const STORAGE_KEYS = {
   checks: 'wahboard.checks',
   settings: 'wahboard.settings',
-  scomIntegration: 'wahboard.integrations.scom'
+  scomIntegration: 'wahboard.integrations.scom',
+  scomAlerts: 'wahboard.integrations.scom.alerts'
 };
 
 const defaultSettings = {
@@ -55,6 +56,19 @@ export function getScomIntegration() {
 
 export function saveScomIntegration(nextIntegration) {
   localStorage.setItem(STORAGE_KEYS.scomIntegration, JSON.stringify(nextIntegration));
+}
+
+export function getScomAlerts() {
+  const raw = localStorage.getItem(STORAGE_KEYS.scomAlerts);
+  return raw ? JSON.parse(raw) : [];
+}
+
+export function saveScomAlerts(alerts) {
+  localStorage.setItem(STORAGE_KEYS.scomAlerts, JSON.stringify(alerts));
+}
+
+export function clearScomAlerts() {
+  localStorage.removeItem(STORAGE_KEYS.scomAlerts);
 }
 
 export function setActiveNav() {

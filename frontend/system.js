@@ -1,4 +1,11 @@
-import { getSettings, saveSettings, getScomIntegration, saveScomIntegration } from './app.js';
+import {
+  getSettings,
+  saveSettings,
+  getScomIntegration,
+  saveScomIntegration,
+  saveScomAlerts,
+  clearScomAlerts
+} from './app.js';
 
 const settingsForm = document.getElementById('settings-form');
 const resetSettingsBtn = document.getElementById('reset-settings');
@@ -145,6 +152,15 @@ scomSyncNowBtn.addEventListener('click', () => {
   next.lastSyncStatus = 'success';
   next.lastSyncAt = new Date().toISOString();
   next.lastSyncSummary = 'Importerade 12 monitorer och 4 aktiva alerts från SCOM (simulerat).';
+
+  const simulatedAlerts = [
+    { title: 'CPU hög på SQL-01', severity: 'critical', source: 'SQL-01', updatedAt: new Date().toISOString() },
+    { title: 'Disk > 80% på WEB-02', severity: 'warning', source: 'WEB-02', updatedAt: new Date().toISOString() },
+    { title: 'Backup lyckades', severity: 'info', source: 'BKP-01', updatedAt: new Date().toISOString() },
+    { title: 'Minnestryck på APP-04', severity: 'warning', source: 'APP-04', updatedAt: new Date().toISOString() }
+  ];
+
+  saveScomAlerts(simulatedAlerts);
   saveScomIntegration(next);
   populateScom();
   setScomFeedback('SCOM-synk kördes klart och domänobjekt uppdaterades (simulerad körning).', 'success');
@@ -152,6 +168,7 @@ scomSyncNowBtn.addEventListener('click', () => {
 
 scomResetBtn.addEventListener('click', () => {
   localStorage.removeItem('wahboard.integrations.scom');
+  clearScomAlerts();
   populateScom();
   setScomFeedback('SCOM-konfiguration återställd till standardvärden.', 'warn');
 });

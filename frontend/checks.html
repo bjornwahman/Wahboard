@@ -26,7 +26,7 @@
             <h2>REST API checks</h2>
             <p class="muted">Skapa, kör och ta bort checks direkt i GUI.</p>
           </div>
-          <button id="run-all">Kör alla checks</button>
+          <div style="display:flex; gap:8px;"><button id="run-all">Kör alla checks</button><button id="run-due" class="secondary">Kör schemalagda</button></div>
         </header>
 
         <section class="card">
@@ -36,6 +36,7 @@
               <select name="type" id="check-type">
                 <option value="rest">REST API</option>
                 <option value="kusto">Azure Kusto</option>
+                <option value="powershell">PowerShell</option>
               </select>
             </label>
             <label>Namn
@@ -64,6 +65,15 @@
             <label class="kusto-field">Expected rows (min)
               <input name="expectedRows" type="number" min="0" value="1" />
             </label>
+            <label class="powershell-field">PowerShell script
+              <textarea name="script" rows="5" placeholder="Get-Service | Where-Object {$_.Status -eq &quot;Running&quot;} | Select-Object -First 5"></textarea>
+            </label>
+            <label class="powershell-field">Förväntad text i output
+              <input name="expectedText" placeholder="Running" />
+            </label>
+            <label class="powershell-field">Script-timeout (ms)
+              <input name="scriptTimeoutMs" type="number" min="500" value="5000" />
+            </label>
             <label>Interval (s)
               <input name="intervalSeconds" type="number" min="5" value="30" />
             </label>
@@ -83,6 +93,7 @@
                 <th>Target</th>
                 <th>Status</th>
                 <th>Latency</th>
+                <th>Senaste output</th>
                 <th>Actions</th>
               </tr>
             </thead>
