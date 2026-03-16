@@ -1,6 +1,8 @@
 const STORAGE_KEYS = {
   checks: 'wahboard.checks',
   settings: 'wahboard.settings',
+  dashboards: 'wahboard.dashboards',
+  activeDashboardId: 'wahboard.activeDashboardId',
   scomIntegration: 'wahboard.integrations.scom',
   scomAlerts: 'wahboard.integrations.scom.alerts'
 };
@@ -31,6 +33,15 @@ const defaultScomIntegration = {
   lastSyncSummary: ''
 };
 
+const defaultDashboards = [
+  {
+    id: 'dashboard-default',
+    name: 'Standarddashboard',
+    description: 'Gemensam överblick för checks.',
+    createdAt: new Date().toISOString()
+  }
+];
+
 export function getSettings() {
   const raw = localStorage.getItem(STORAGE_KEYS.settings);
   return raw ? { ...defaultSettings, ...JSON.parse(raw) } : { ...defaultSettings };
@@ -38,6 +49,28 @@ export function getSettings() {
 
 export function saveSettings(nextSettings) {
   localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(nextSettings));
+}
+
+export function getDashboards() {
+  const raw = localStorage.getItem(STORAGE_KEYS.dashboards);
+  const dashboards = raw ? JSON.parse(raw) : defaultDashboards;
+  if (!dashboards.length) {
+    saveDashboards(defaultDashboards);
+    return [...defaultDashboards];
+  }
+  return dashboards;
+}
+
+export function saveDashboards(dashboards) {
+  localStorage.setItem(STORAGE_KEYS.dashboards, JSON.stringify(dashboards));
+}
+
+export function getActiveDashboardId() {
+  return localStorage.getItem(STORAGE_KEYS.activeDashboardId) || getDashboards()[0].id;
+}
+
+export function saveActiveDashboardId(dashboardId) {
+  localStorage.setItem(STORAGE_KEYS.activeDashboardId, dashboardId);
 }
 
 export function getChecks() {
